@@ -293,3 +293,6 @@ createdb trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
+
+## References 
+#### [Understanding abort() behavior inside try block](https://stackoverflow.com/questions/17746897/flask-abort-inside-try-block-behaviour) 
