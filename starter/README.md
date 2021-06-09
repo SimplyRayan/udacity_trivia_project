@@ -275,14 +275,15 @@ npm start
 ##### Request Sample : `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"category":{"type":"Science", "id":1 },previous_questions =[{ "answer": "Uruguay", "category": 6, "difficulty": 4, "id": 11, "question": "Which country won the first ever soccer World Cup in 1930?" },] }`
 ##### Response Sample: 
 ```
-[
-{"id":1,"type":"Science"},
-{"id":2,"type":"Art"},
-{"id":3,"type":"Geography"},
-{"id":4,"type":"History"},
-{"id":5,"type":"Entertainment"},
-{"id":6,"type":"Sports"}
-]
+{
+'success:true,
+'question':{
+"answer":  "Brazil",
+"category":  6,
+"difficulty":  3,
+"id":  10,
+"question":  "Which is the only team to play in every soccer World Cup tournament?"
+}
 ```
 
 ## Testing
