@@ -1,111 +1,298 @@
-# Backend - Full Stack Trivia API 
-
-### Installing Dependencies for the Backend
-
-1. **Python 3.7** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+﻿
+# Trivia
+##### The App allows you to test your knowledge on many different categories, you can also add and delete questions!
 
 
-2. **Virtual Enviornment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+## Running the project
 
+#### 1.Backend
+##### first you might want to create a virtual environment, after that you can run the following:  
 
-3. **PIP Dependencies** - Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
-```bash
+```
 pip install -r requirements.txt
 ```
-This will install all of the required packages we selected within the `requirements.txt` file.
 
-
-4. **Key Dependencies**
- - [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
-
- - [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
-
- - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
-
-### Database Setup
-With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
-```bash
+##### Database setup:  
+```
 psql trivia < trivia.psql
 ```
 
-### Running the server
+##### windows users can run this instead  
+ ````
+psql -U postgres -f trivia.psql trivia 
+ ````
+ 
+##### Running the server :  
+ ````
+$env:FLASK_APP="__init__"
+flask run
+ ````
+ 
+ 
+ 
+#### 1.Frontend
+ ````
+npm install
+npm start
+ ````
+ 
+## Docs
 
-From within the `./src` directory first ensure you are working using your created virtual environment.
+### Error Handling
+##### Error are returned as JSON 
+```
+{'success':False,
 
-To run the server, execute:
+'message':'bad request',
 
-```bash
-flask run --reload
+'code':400}
 ```
 
-The `--reload` flag will detect file changes and restart the server automatically.
-
-## ToDo Tasks
-These are the files you'd want to edit in the backend:
-
-1. *./backend/flaskr/`__init__.py`*
-2. *./backend/test_flaskr.py*
+#####  Error types:
+##### 1. 400 : BAD REQUEST
+##### 1. 404: RESOURCES NOT FOUND
+##### 1. 422:  UNPROCESSABLE REQUEST
+##### 1. 500: INTERNAL SERVER ERROR
 
 
-One note before you delve into your tasks: for each endpoint, you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
+### ENDPOINTS
 
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
+ `curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"title":"Neverwhere", "author":"Neil Gaiman", "rating":"5"}`
 
-
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-
-
-3. Create an endpoint to handle GET requests for all available categories. 
-
-
-4. Create an endpoint to DELETE question using a question ID. 
-
-
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-
-
-6. Create a POST endpoint to get questions based on category. 
-
-
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-
-
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-
-
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-
-
-## Review Comment to the Students
+#### GET /categories 
+##### returns all categories
+#####  Request Body: None
+#####  Request arguments : None
+##### Request Sample : `curl http://127.0.0.1:5000/categories `
+##### Response Sample: 
 ```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/api/v1.0/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/api/v1.0/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
+[
+{"id":1,"type":"Science"},
+{"id":2,"type":"Art"},
+{"id":3,"type":"Geography"},
+{"id":4,"type":"History"},
+{"id":5,"type":"Entertainment"},
+{"id":6,"type":"Sports"}
+]
 ```
 
+#### GET /categories/{id}/questions
+##### returns questions that are part of the specified category 
+#####  Request Body: None
+#####  Request arguments : `id (required): id of the category`
+##### Request Sample : `curl http://127.0.0.1:5000/categories/3/questions`
+##### Response Sample: 
+```
+
+  "current_category": "Geography",
+  "questions": [
+    {
+      "answer": "Lake Victoria",
+      "category": 3,
+      "difficulty": 2,
+      "id": 13,
+      "question": "What is the largest lake in Africa?"
+    },
+    {
+      "answer": "The Palace of Versailles",
+      "category": 3,
+      "difficulty": 3,
+      "id": 14,
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    },
+    {
+      "answer": "Agra",
+      "category": 3,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ],
+  "success": true,
+  "totalQuestions": 3
+}
+```
+
+#### GET /questions
+
+##### returns questions
+#####  Request Body: None
+#####  Request arguments : `page(optinal): id of the category`
+##### Request Sample : `curl http://127.0.0.1:5000/questions?page=2`
+##### Response Sample: 
+```
+{
+  "categories": [
+    {
+      "id": 1,
+      "type": "Science"
+    },
+    {
+      "id": 2,
+      "type": "Art"
+    },
+    {
+      "id": 3,
+      "type": "Geography"
+    },
+    {
+      "id": 4,
+      "type": "History"
+    },
+    {
+      "id": 5,
+      "type": "Entertainment"
+    },
+    {
+      "id": 6,
+      "type": "Sports"
+    }
+  ],
+  "current_category ": "History",
+  "questions": [
+    {
+      "answer": "Escher",
+      "category": 2,
+      "difficulty": 1,
+      "id": 16,
+      "question": "Which Dutch graphic artist–initials M C was a creator of optical illusions?"
+    },
+    {
+      "answer": "Mona Lisa",
+      "category": 2,
+      "difficulty": 3,
+      "id": 17,
+      "question": "La Giaconda is better known as what?"
+    },
+    {
+      "answer": "One",
+      "category": 2,
+      "difficulty": 4,
+      "id": 18,
+      "question": "How many paintings did Van Gogh sell in his lifetime?"
+    },
+    {
+      "answer": "Jackson Pollock",
+      "category": 2,
+      "difficulty": 2,
+      "id": 19,
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    },
+    {
+      "answer": "The Liver",
+      "category": 1,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+    {
+      "answer": "Alexander Fleming",
+      "category": 1,
+      "difficulty": 3,
+      "id": 21,
+      "question": "Who discovered penicillin?"
+    },
+    {
+      "answer": "Blood",
+      "category": 1,
+      "difficulty": 4,
+      "id": 22,
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    },
+    {
+      "answer": "Rayan",
+      "category": 1,
+      "difficulty": 1,
+      "id": 26,
+      "question": "who made this app?"
+    }
+  ],
+  "success": true,
+  "total_questions": 18
+}
+```
+
+#### POST /questions
+##### adding questions to app
+#####  (Required) Request Body: `{"question": question [String] ,"answer":answer [String], "category":categoryId [Integer 1..5], "difficulty":difficulty [Integer 1..5] }`
+#####  Request arguments : None
+##### Request Sample :  `curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question":"Is this a good documenation of the API?", "answer":"I hope so", "category":3 ,difficulty:5}`
+##### Response Sample: 
+```
+{
+'success':True,
+
+'id':77 
+}
+```
+###### id is the newly created question id.
+
+
+#### DELETE /questions/{id}
+##### delete the specified question 
+#####  Request Body: None
+#####  Request arguments : None
+##### Request Sample : `curl http://127.0.0.1:5000/questions/14 -X DELETE `
+##### Response Sample: 
+```
+{
+'success':true
+}
+```
+
+#### POST /questions/search
+##### returns questions that contain strings that  match the search term
+##### (Required) Request Body: `{ "searchTerm": search_term [String] }`
+#####  Request arguments : None
+##### Request Sample : `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "soccer"}`
+##### Response Sample: 
+```
+{
+"questions":  [
+{
+"answer":  "Brazil",
+"category":  6,
+"difficulty":  3,
+"id":  10,
+"question":  "Which is the only team to play in every soccer World Cup tournament?"
+},
+{
+"answer":  "Uruguay",
+"category":  6,
+"difficulty":  4,
+"id":  11,
+"question":  "Which country won the first ever soccer World Cup in 1930?"
+}
+],
+"success":  true
+}
+```
+
+#### POST /quizzes
+##### return a random questions given a category (optional), and a list of previous questions
+##### (Required) Request Body: `{ "quiz_category": Category,previous_questions = [Array of questions]  }`
+#####  Request arguments : None
+##### Request Sample : `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"category":{"type":"Science", "id":1 },previous_questions =[{ "answer": "Uruguay", "category": 6, "difficulty": 4, "id": 11, "question": "Which country won the first ever soccer World Cup in 1930?" },] }`
+##### Response Sample: 
+```
+[
+{"id":1,"type":"Science"},
+{"id":2,"type":"Art"},
+{"id":3,"type":"Geography"},
+{"id":4,"type":"History"},
+{"id":5,"type":"Entertainment"},
+{"id":6,"type":"Sports"}
+]
+```
 
 ## Testing
-To run the tests, run
+##### in order to test the application run :  
 ```
 dropdb trivia_test
 createdb trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
+
+## References 
+#### [Understanding abort() behavior inside try block](https://stackoverflow.com/questions/17746897/flask-abort-inside-try-block-behaviour) 
